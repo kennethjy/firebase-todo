@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import plus from './assets/plus.png'
+import plus from './plus.png'
 import './App.css'
 
 function App() {
