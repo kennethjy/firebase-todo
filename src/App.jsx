@@ -49,7 +49,7 @@ function App() {
       <div class="todo-container">
         {renderedOutput}
         <div class="addButton" onClick={appendlist}>
-          <img src='/plus.png'></img>
+          +
         </div>
       </div>
       
