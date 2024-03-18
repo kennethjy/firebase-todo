@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import plus from './assets/plus.png'
 import './App.css'
 
 function App() {
@@ -51,7 +50,7 @@ function App() {
       <div class="todo-container">
         {renderedOutput}
         <div class="addButton" onClick={appendlist}>
-          <img src='src/assets/plus.png'></img>
+          <img src='./assets/plus.png'></img>
         </div>
       </div>
       
