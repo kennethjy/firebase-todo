@@ -50,7 +50,7 @@ function App() {
       <div class="todo-container">
         {renderedOutput}
         <div class="addButton" onClick={appendlist}>
-          <img src='/assets/plus.png'></img>
+          <img src='src/plus.png'></img>
         </div>
       </div>
       
