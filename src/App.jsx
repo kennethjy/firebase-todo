@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './App.css'
+import { TbTrash } from 'react-icons/tb';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -15,12 +16,13 @@ function App() {
   function appendlist() {
     const newItem = {
       date: new Date().toISOString().split('T')[0],
-      description: "New Item"
+      description: "New Item",
+      isChecked: false
     };
     setArr([...arr, newItem]);
   }
 
-  function handleChange(index, event) {
+  function changeDescription(index, event) {
     const newArr = [...arr];
     newArr[index].description = event.target.innerText;
     setArr(newArr);
@@ -29,14 +31,32 @@ function App() {
     const newTodos = arr.filter((_, todoIndex) => todoIndex !== index);
     setArr(newTodos);
   }
+  function changeCheck(index) {
+    const newArr = [...arr];
+    newArr[index].isChecked = !newArr[index].isChecked;
+    setArr(newArr);
+  }
 
-  const renderedOutput = arr.map((item, index) => (
+
+  const renderedOutput = arr
+  .sort((a, b) => (a.isChecked === b.isChecked ? 0 : a.isChecked ? 1 : -1))
+  .map((item, index) => (
       <div key={index} class="todo-item">
-        <button onClick={() => removeTodo(index)} class="removeButton">X</button>
-        <h1 contentEditable="true" onBlur={(event) => handleChange(index, event)} class="description">
+        <div class="left-todo">
+        <div class="checkbox-outer" onClick={() => changeCheck(index)}>
+          <div class={item.isChecked? "checkbox-middle-checked" : "checkbox-middle-unchecked"}>
+          </div>
+        </div>
+        <div class="todo-content">
+        <h1 contentEditable="true" onBlur={(event) => changeDescription(index, event)} class="description">
           {item.description}
         </h1>
         <p class="date">{item.date}</p>
+        </div>
+        </div>
+        <button onClick={() => removeTodo(index)} class="removeButton">
+          <TbTrash />
+        </button>
     </div>
   ));
 

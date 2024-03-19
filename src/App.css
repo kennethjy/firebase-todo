@@ -62,6 +62,61 @@ img{
   width: 70vw;
   box-sizing: border-box; 
 }
+.todo-item {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-radius: 25px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content:space-between;
+  background: #4d4d4d;
+  padding: 20px;
+  width: 100%;
+}
+.left-todo{
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 50%;
+  align-items: center;
+}
+.todo-content{
+  margin-left: 10%;
+}
+.checkbox-outer{
+  border-radius: 25%;
+  align-items: center;
+  height: 50%;
+  display: flex;
+  aspect-ratio: 1/1;
+  background: #1b1b1baa;
+  position: relative;
+}
+.checkbox-middle-checked,
+.checkbox-middle-unchecked {
+  border-radius: 25%;
+  margin: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  height: 70%;
+  aspect-ratio: 1/1;
+  align-items: center;
+  position: relative;
+  transition: border-color 0.3s ease, background-color 0.3s ease; /* Transition border and background color */
+}
+
+.checkbox-middle-checked {
+  border: 5px solid #000000aa; /* Border color for checked state */
+  background: #6d6d6daa; /* Background color for checked state */
+}
+
+.checkbox-middle-unchecked {
+  height: 75%; /* Adjust height for unchecked state */
+  background: #000000aa; /* Background color for unchecked state */
+}
+
+
 
 .addButton{
   align-items: center;
@@ -80,15 +135,6 @@ img{
 }
 .addButton:hover{
   filter: drop-shadow(0 0 2em #000000aa);
-}
-.todo-item {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  border-radius: 25px;
-  background: #4d4d4d;
-  padding: 20px;
-  width: 100%;
-  position: relative;
 }
 
 .remove-button {
