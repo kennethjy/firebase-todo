@@ -138,9 +138,11 @@ img{
   cursor: pointer;
   font-size: 24pt;
   color: white;
+  transition: filter 0.3s ease
 }
+
 .addButton:hover{
-  filter: drop-shadow(0 0 2em #000000aa);
+  filter: drop-shadow(0 0 1em #000000aa);
 }
 
 .remove-button {
