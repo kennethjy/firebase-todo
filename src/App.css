@@ -43,8 +43,9 @@
   border-radius: 25px;
   background: #4d4d4d;
   padding: 20px;
-  width: 100%;
+  width: 100vw;
   height: 150px;
+  transition: filter 0.3s ease
 }
 .todo-item:hover{
   filter: drop-shadow(0 0 2em #000000aa);
@@ -60,7 +61,8 @@ img{
   align-items: center;
   justify-content: center; 
   width: 70vw;
-  box-sizing: border-box; 
+  box-sizing: border-box;
+  align-self: center; 
 }
 .todo-item {
   margin-top: 20px;
@@ -92,6 +94,7 @@ img{
   aspect-ratio: 1/1;
   background: #1b1b1baa;
   position: relative;
+  transition: filter 0.3s ease
 }
 .checkbox-outer:hover{
   filter: drop-shadow(0 0 2em #000000aa);
@@ -158,4 +161,31 @@ img{
 
 .date {
   margin-right: 0;
+}
+
+.filter{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.select-dropdown {
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 200px; /* Adjust width as needed */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #131313;
+  font-size: 16px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+}
+
+option {
+  background-color: #fff;
+  color: #000;
 }
