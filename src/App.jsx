@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import './App.css'
-import { TbTrash } from 'react-icons/tb';
 
 function App() {
   const [count, setCount] = useState(0)
