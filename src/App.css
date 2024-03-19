@@ -93,6 +93,9 @@ img{
   background: #1b1b1baa;
   position: relative;
 }
+.checkbox-outer:hover{
+  filter: drop-shadow(0 0 2em #000000aa);
+}
 .checkbox-middle-checked,
 .checkbox-middle-unchecked {
   border-radius: 25%;

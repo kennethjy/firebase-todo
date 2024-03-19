@@ -54,7 +54,7 @@ function App() {
         </div>
         </div>
         <button onClick={() => removeTodo(index)} class="removeButton">
-          <TbTrash />
+          X
         </button>
     </div>
   ));
