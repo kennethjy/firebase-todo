@@ -5,7 +5,7 @@ import { FiX, FiFilter } from "react-icons/fi";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "firebase/firestore";
+import { getDoc, getFirestore, where } from "firebase/firestore";
 import { collection, doc, addDoc, updateDoc, deleteDoc, query, orderBy, onSnapshot } from "firebase/firestore"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -28,14 +28,15 @@ const analytics = getAnalytics(app);
 const db = getFirestore(app);
 
 function Todo() {
-  const [arr, setArr] = useState(() => {
-    const storedArr = localStorage.getItem('myArr');
-    return storedArr ? JSON.parse(storedArr) : [];
-  });
+  const [arr, setArr] = useState([]);
   const [filterOption, setFilterOption] = useState('all');
 
   useEffect(() => {
-    getarrayfromfirebase()
+      getarrayfromfirebase();
+      console.log(arr);
+      const sortedarr = arr.toSorted((a, b) => (a.isChecked - b.isChecked));
+      setArr([...sortedarr]);
+      console.log(arr);
   }, []);
 
   function getarrayfromfirebase(){
@@ -50,7 +51,6 @@ function Todo() {
         })
       ))
     })
-    console.log(arr);
   }
 
   function getsortedarrayfromfirebase(){
@@ -83,9 +83,9 @@ function Todo() {
     }
   }
 
-  async function changeDescription(index, event) {
+  async function changeDescription(id, event) {
     event.preventDefault()
-    const todoDocRef = doc(db, 'tasks', arr[index].id)
+    const todoDocRef = doc(db, 'tasks', id)
     try{
       await updateDoc(todoDocRef, 
         {
@@ -96,23 +96,26 @@ function Todo() {
       alert(err)
     }
   }
-  async function removeTodo(index) {
-    const todoDocRef = doc(db, 'tasks', arr[index].id)
+  async function removeTodo(id) {
+    const todoDocRef = doc(db, 'tasks', id)
     try{
       await deleteDoc(todoDocRef)
     } catch(err) {
       alert(err)
     }
   }
-  async function changeCheck(index, event) {
-    event.preventDefault()
-    const todoDocRef = doc(db, 'tasks', arr[index].id)
+  async function changeCheck(id, event) {
+    event.preventDefault();
+    const todoDocRef = doc(db, 'tasks', id);
     try{
-      await updateDoc(todoDocRef, 
-        {
-          isChecked: !arr[index].isChecked
-        }
-      )
+      const document = await getDoc(todoDocRef);
+      if (document.exists){
+        await updateDoc(todoDocRef, 
+          {
+            isChecked: !document.data().isChecked //this is supposed to flip the value
+          }
+        )
+      }
     } catch(err) {
       alert(err)
     }
@@ -152,12 +155,12 @@ function Todo() {
   const renderedOutput = filteredArr.map((item, index) => (
       <div key={index} class="todo-item">
         <div class="left-todo">
-        <div class="checkbox-outer" onClick={(e) => changeCheck(index, e)}>
+        <div class="checkbox-outer" onClick={(e) => changeCheck(item.id, e)}>
           <div class={item.isChecked? "checkbox-middle-checked" : "checkbox-middle-unchecked"}>
           </div>
         </div>
         <div class="todo-content">
-        <h1 contentEditable="true" onBlur={(event) => changeDescription(index, event)} class="description">
+        <h1 contentEditable="true" onBlur={(event) => changeDescription(item.id, event)} class="description">
           {item.description}
         </h1>
         <p class="date">{item.date}</p>
