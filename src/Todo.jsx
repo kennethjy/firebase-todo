@@ -5,7 +5,7 @@ import { FiX, FiFilter } from "react-icons/fi";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getDoc, getFirestore, where } from "firebase/firestore";
+import { getDoc, getDocs, getFirestore, where } from "firebase/firestore";
 import { collection, doc, addDoc, updateDoc, deleteDoc, query, orderBy, onSnapshot } from "firebase/firestore"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -33,40 +33,41 @@ function Todo() {
 
   useEffect(() => {
       getarrayfromfirebase();
-      console.log(arr);
-      const sortedarr = arr.toSorted((a, b) => (a.isChecked - b.isChecked));
-      setArr([...sortedarr]);
-      console.log(arr);
   }, []);
 
-  function getarrayfromfirebase(){
+  async function getarrayfromfirebase(){
     const q = query(collection(db, 'tasks'));
-    onSnapshot(q, (querySnapshot) => {
-      setArr(querySnapshot.docs.map(
-        doc => ({
-          id: doc.id,
-          date: doc.data().date,
-          description: doc.data().description,
-          isChecked: doc.data().isChecked
-        })
-      ))
-    })
+    const queryDocs = await getDocs(q);
+    setArr(queryDocs.docs.map(
+      doc => ({
+        id: doc.id,
+        date: doc.data().date,
+        description: doc.data().description,
+        isChecked: doc.data().isChecked
+      })
+    ));
   }
+  async function updatearrfromfirebase(){
+    const newArr = [];
+    for (let i=0; i < arr.length; i++){
+      const docRef = doc(db, 'tasks', arr[i].id);
+      const document = await getDoc(docRef);
+      console.log()
+      if (document.exists){
+        newArr.push({
+          id: document.id,
+          date: document.data().date,
+          description: document.data().description,
+          isChecked: document.data().isChecked
+        })
+      }
+    }
+    console.log(newArr);
+    setArr([...newArr]);
+  } 
 
-  function getsortedarrayfromfirebase(){
-    const q = query(collection(db, 'tasks'), orderBy('isChecked', 'asc'));
-    onSnapshot(q, (querySnapshot) => {
-      setArr(querySnapshot.docs.map(
-        doc => ({
-          id: doc.id,
-          date: doc.data().date,
-          description: doc.data().description,
-          isChecked: doc.data().isChecked
-        })
-      ))
-    })
-    console.log(arr);
-  }
+  
+  
 
   const addtoDB = async (e) => {
     e.preventDefault()
@@ -84,9 +85,9 @@ function Todo() {
   }
 
   async function changeDescription(id, event) {
-    event.preventDefault()
-    const todoDocRef = doc(db, 'tasks', id)
+    event.preventDefault();
     try{
+      const todoDocRef = doc(db, 'tasks', id);
       await updateDoc(todoDocRef, 
         {
           description: event.target.innerText
@@ -95,14 +96,17 @@ function Todo() {
     } catch(err) {
       alert(err)
     }
+    updatearrfromfirebase();
   }
-  async function removeTodo(id) {
-    const todoDocRef = doc(db, 'tasks', id)
+  async function removeTodo(id, event) {
+    event.preventDefault;
     try{
-      await deleteDoc(todoDocRef)
+      const todoDocRef = doc(db, 'tasks', id);
+      await deleteDoc(todoDocRef);
     } catch(err) {
-      alert(err)
+      alert(err);
     }
+    updatearrfromfirebase();
   }
   async function changeCheck(id, event) {
     event.preventDefault();
@@ -112,28 +116,30 @@ function Todo() {
       if (document.exists){
         await updateDoc(todoDocRef, 
           {
-            isChecked: !document.data().isChecked //this is supposed to flip the value
+            isChecked: !document.data().isChecked
           }
         )
       }
     } catch(err) {
       alert(err)
     }
+    updatearrfromfirebase();
   }
   function filterArray() {
-    console.log(arr)
     switch (filterOption) {
       case 'checked':
-        return arr.filter(item => item.isChecked);
+        return arr.filter(item => item.isChecked).sort((a, b) => (a.isChecked === b.isChecked ? 0 : a.isChecked ? 1 : -1));
       case 'unchecked':
-        return arr.filter(item => !item.isChecked);
+        return arr.filter(item => !item.isChecked).sort((a, b) => (a.isChecked === b.isChecked ? 0 : a.isChecked ? 1 : -1));
       default:
         return arr;
     }
   }
 
   useEffect(
-    () => {arr.sort((a, b) => (a.isChecked === b.isChecked ? 0 : a.isChecked ? 1 : -1))},
+    () => {
+      arr.sort((a, b) => (a.isChecked === b.isChecked ? 0 : a.isChecked ? 1 : -1));
+    },
     [filterOption]
   )
 
@@ -166,7 +172,7 @@ function Todo() {
         <p class="date">{item.date}</p>
         </div>
         </div>
-        <button onClick={() => removeTodo(index)} class="removeButton">
+        <button onClick={(e) => removeTodo(item.id, e)} class="removeButton">
           <FiX size={30}/>
         </button>
     </div>
