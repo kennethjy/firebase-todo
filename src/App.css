@@ -74,7 +74,7 @@ img{
   justify-content:space-between;
   background: #4d4d4d;
   padding: 20px;
-  width: 100%;
+  width: 80%;
 }
 .left-todo{
   display: flex;
@@ -133,7 +133,7 @@ img{
   border-radius: 25px;
   background: #4d4d4d;
   padding: 20px;
-  width: 100%;
+  width: 80%;
   height: 50px;
   cursor: pointer;
   font-size: 24pt;
