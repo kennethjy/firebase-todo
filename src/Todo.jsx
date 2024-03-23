@@ -29,6 +29,13 @@ function Todo() {
   const [arr, setArr] = useState([]);
   const [filterOption, setFilterOption] = useState('all');
   const [user, loading, error] = useAuthState(auth);
+  const [userData, setUserData] = useState("")
+    async function getUser(){
+            const q = query(collection(db, 'users'), where("uid", "==", user.uid));
+            const userDocs = await getDocs(q);
+            const userDoc = await getDoc(userDocs.docs[0].ref);
+            setUserData(userDoc.data());
+    }
 
   useEffect(() => {
     
@@ -40,6 +47,7 @@ function Todo() {
 
   useEffect(() => {
       setarrayfromfirebase();
+      getUser();
   }, []);
   
   async function setarrayfromfirebase(){
@@ -174,7 +182,6 @@ function Todo() {
 
   // Filter the array based on the filter option
   const filteredArr = filterArray();
-
   const renderedOutput = filteredArr.map((item, index) => (
     <div className='todo-container'>
       <div key={index} class="todo-item">
@@ -196,14 +203,14 @@ function Todo() {
       </div>
     </div>
   ));
-
+    
   
 
   return (
     <>
       <div class="todo-container">
       <AccountDrawer />
-      <h1>To-do List</h1>
+      <h1>{userData.name? userData.name + "'s To-do List" : "To-do List"}</h1>
       <p>by: Kenneth Jayadi Yu 2602158260</p>
         {filterModule}
         {renderedOutput}

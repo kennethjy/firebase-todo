@@ -13,8 +13,8 @@ function AccountDrawer(){
     const auth = Auth();
     const navigate = useNavigate();
     const [user, loading, error] = useAuthState(auth);
-    const [userData, setUserData] = useState("")
     const db = getFirestore(App());
+    const [userData, setUserData] = useState("")
     async function getUser(){
             const q = query(collection(db, 'users'), where("uid", "==", user.uid));
             const userDocs = await getDocs(q);
