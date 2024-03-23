@@ -11,7 +11,9 @@ import {
   } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { App, Auth } from "./FirebaseApp";
-import { collection, query, getDocs, getFirestore, where } from "firebase/firestore";
+import { collection,
+    getDocs, getFirestore, 
+    addDoc, query, where } from "firebase/firestore";
 import './App.css'
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -69,7 +71,7 @@ function Register() {
     };
     useEffect(() => {
       if (loading) return;
-      if (user) navigate("/dashboard");
+      if (user) navigate("/app");
     }, [user, loading]);
     
     return (

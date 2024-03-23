@@ -83,7 +83,8 @@ function Todo() {
         {
           date: new Date().toISOString().split('T')[0],
           description: "New Item",
-          isChecked: false
+          isChecked: false,
+          uid: user.uid
         }
       )
       const document = await getDoc(docRef);
