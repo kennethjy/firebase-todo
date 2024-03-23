@@ -31,16 +31,17 @@ function Register() {
     const navigate = useNavigate();
     const googleProvider = new GoogleAuthProvider();
 
-    const registerWithEmailAndPassword = async (name, email, password) => {
+    const registerWithEmailAndPassword = async (n, e, password) => {
         try {
           const res = await createUserWithEmailAndPassword(auth, email, password);
           const user = res.user;
           await addDoc(collection(db, "users"), {
             uid: user.uid,
-            name,
+            name: n,
             authProvider: "local",
-            email,
+            email:e,
           });
+          console.log("added user")
         } catch (err) {
           console.error(err);
           alert(err.message);
@@ -65,9 +66,9 @@ function Register() {
             alert(err.message);
         }
     };
-    const register = () => {
+    const register = async () => {
       if (!name) alert("Please enter name");
-      registerWithEmailAndPassword(name, email, password);
+      await registerWithEmailAndPassword(name, email, password);
     };
     useEffect(() => {
       if (loading) return;

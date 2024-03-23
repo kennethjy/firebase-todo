@@ -200,7 +200,7 @@ option {
   flex-direction: column;
   align-items: center;
   justify-content: center; 
-  width: 100vw;
+  width: 100%;
   box-sizing: border-box;
   align-self: center; 
 }
@@ -239,7 +239,7 @@ option {
   flex-direction: column;
   align-items: center;
   justify-content: center; 
-  width: 100vw;
+  width: 100%;
   box-sizing: border-box;
   align-self: center; 
 }
@@ -267,6 +267,45 @@ option {
   margin-top: 5px;
   margin-bottom: 5px;
   width: 200px; /* Adjust width as needed */
+  padding: 10px;
+}
+
+.reset__container{
+  margin: 0 auto;
+  display: flex;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; 
+  width: 100%;
+  box-sizing: border-box;
+  align-self: center; 
+}
+
+.reset__textBox{
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 200px; /* Adjust width as needed */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #131313;
+  font-size: 16px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+}
+
+.reset__btn{
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 300px; /* Adjust width as needed */
   padding: 10px;
 }
 
@@ -308,4 +347,8 @@ option {
   position: fixed;
   top: 10px;
   left: 10px;
+}
+
+.del{
+  background-color: #ff0000;
 }
