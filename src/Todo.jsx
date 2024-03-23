@@ -1,42 +1,49 @@
 import React, { useState, useEffect } from 'react'
+import { Link, useNavigate } from "react-router-dom";
+import AccountDrawer from './Account';
 import './App.css'
 import { CgAddR } from "react-icons/cg";
 import { FiX, FiFilter } from "react-icons/fi";
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getDoc, getDocs, getFirestore, where } from "firebase/firestore";
-import { collection, doc, addDoc, updateDoc, deleteDoc, query, orderBy, onSnapshot } from "firebase/firestore"
+import { App, Auth } from './FirebaseApp';
+import { getAnalytics } from "firebase/analytics"; 
+import  { collection, 
+          getDoc, getDocs, getFirestore, 
+          doc, addDoc, updateDoc, deleteDoc, 
+          query, where, orderBy, onSnapshot } from "firebase/firestore"
+import { useAuthState } from "react-firebase-hooks/auth";
+import { getAuth } from 'firebase/auth';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyAtJHtSpl5gsDmZf8XE2U0797ndIDXg7qU",
-  authDomain: "vite-test-projectt.firebaseapp.com",
-  projectId: "vite-test-projectt",
-  storageBucket: "vite-test-projectt.appspot.com",
-  messagingSenderId: "730310663151",
-  appId: "1:730310663151:web:d146930488431b9381f41a",
-  measurementId: "G-QFVDF4MB23"
-};
-
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const db = getFirestore(app);
+
 
 function Todo() {
+  const app = App();
+  const db = getFirestore(app);
+  const auth = Auth();
+  const navigate = useNavigate();
   const [arr, setArr] = useState([]);
   const [filterOption, setFilterOption] = useState('all');
+  const [user, loading, error] = useAuthState(auth);
 
   useEffect(() => {
-      getarrayfromfirebase();
-  }, []);
+    
+    if (!user) { 
+      console.log(user,loading,error);
+      navigate("/");
+    }
+    }, [user, loading]);
 
-  async function getarrayfromfirebase(){
-    const q = query(collection(db, 'tasks'));
+  useEffect(() => {
+      setarrayfromfirebase();
+  }, []);
+  
+  async function setarrayfromfirebase(){
+    const q = query(collection(db, 'tasks'), where("uid", "==", user.uid));
     const queryDocs = await getDocs(q);
     setArr(queryDocs.docs.map(
       doc => ({
@@ -52,8 +59,7 @@ function Todo() {
     for (let i=0; i < arr.length; i++){
       const docRef = doc(db, 'tasks', arr[i].id);
       const document = await getDoc(docRef);
-      console.log()
-      if (document.exists){
+      if (document.data() != undefined){
         newArr.push({
           id: document.id,
           date: document.data().date,
@@ -61,6 +67,7 @@ function Todo() {
           isChecked: document.data().isChecked
         })
       }
+      
     }
     console.log(newArr);
     setArr([...newArr]);
@@ -72,13 +79,22 @@ function Todo() {
   const addtoDB = async (e) => {
     e.preventDefault()
     try{
-      await addDoc(collection(db, 'tasks'), 
+      const docRef = await addDoc(collection(db, 'tasks'), 
         {
           date: new Date().toISOString().split('T')[0],
           description: "New Item",
           isChecked: false
         }
       )
+      const document = await getDoc(docRef);
+      arr.push({
+        id: document.id,
+        date: document.data().date,
+        description: document.data().description,
+        isChecked: document.data().isChecked,
+        uid: user.uid
+      })
+      updatearrfromfirebase();
     } catch(err) {
       alert(err)
     }
@@ -159,6 +175,7 @@ function Todo() {
   const filteredArr = filterArray();
 
   const renderedOutput = filteredArr.map((item, index) => (
+    <div className='todo-container'>
       <div key={index} class="todo-item">
         <div class="left-todo">
         <div class="checkbox-outer" onClick={(e) => changeCheck(item.id, e)}>
@@ -175,6 +192,7 @@ function Todo() {
         <button onClick={(e) => removeTodo(item.id, e)} class="removeButton">
           <FiX size={30}/>
         </button>
+      </div>
     </div>
   ));
 
@@ -183,6 +201,7 @@ function Todo() {
   return (
     <>
       <div class="todo-container">
+      <AccountDrawer />
       <h1>To-do List</h1>
       <p>by: Kenneth Jayadi Yu 2602158260</p>
         {filterModule}
