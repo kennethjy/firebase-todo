@@ -38,16 +38,16 @@ function Todo() {
     }
 
   useEffect(() => {
-    
     if (!user) { 
       console.log(user,loading,error);
       navigate("/");
     }
-    }, [user, loading]);
+    }, [user]);
 
   useEffect(() => {
       setarrayfromfirebase();
       getUser();
+      console.log('aaa')
   }, []);
   
   async function setarrayfromfirebase(){
@@ -77,7 +77,6 @@ function Todo() {
       }
       
     }
-    console.log(newArr);
     setArr([...newArr]);
   } 
 
