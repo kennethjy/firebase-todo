@@ -27,7 +27,8 @@ function AccountDrawer(){
     }; 
 
     const logout = () => {
-        signOut(Auth())
+        signOut(Auth());
+        navigate("/");
     }
 
     const deleteAccount = async () => {

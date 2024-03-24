@@ -38,13 +38,6 @@ function Todo() {
     }
 
   useEffect(() => {
-    if (!user) { 
-      console.log(user,loading,error);
-      navigate("/");
-    }
-    }, [user]);
-
-  useEffect(() => {
       setarrayfromfirebase();
       getUser();
       console.log('aaa')
