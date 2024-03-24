@@ -96,14 +96,15 @@ function Todo() {
         }
       )
       const document = await getDoc(docRef);
-      arr.push({
+      const newArr = [...arr];
+      newArr.push({
         id: document.id,
         date: document.data().date,
         description: document.data().description,
         isChecked: document.data().isChecked,
         uid: user.uid
       })
-      updatearrfromfirebase();
+      setArr([...newArr]);
     } catch(err) {
       alert(err)
     }
@@ -118,20 +119,28 @@ function Todo() {
           description: event.target.innerText
         }
       )
+      const newArr = [...arr];
+      for (let i=0; i < newArr.length; i++){
+        if (newArr[i].id == id){
+          newArr[i].description = event.target.innerText;
+          setArr([...newArr])
+          break;
+        }
+      }
     } catch(err) {
       alert(err)
     }
-    updatearrfromfirebase();
   }
   async function removeTodo(id, event) {
     event.preventDefault;
     try{
       const todoDocRef = doc(db, 'tasks', id);
       await deleteDoc(todoDocRef);
+      const newArr = arr.filter((item) => item.id !== id);
+      setArr(newArr);
     } catch(err) {
       alert(err);
     }
-    updatearrfromfirebase();
   }
   async function changeCheck(id, event) {
     event.preventDefault();
@@ -144,11 +153,17 @@ function Todo() {
             isChecked: !document.data().isChecked
           }
         )
+        for (let i=0; i < newArr.length; i++){
+          if (newArr[i].id == id){
+            newArr[i].isChecked = !newArr[i].isChecked;
+            setArr([...newArr])
+            break;
+          }
+        }
       }
     } catch(err) {
       alert(err)
     }
-    updatearrfromfirebase();
   }
   function filterArray() {
     switch (filterOption) {
@@ -164,6 +179,7 @@ function Todo() {
   useEffect(
     () => {
       arr.sort((a, b) => (a.isChecked === b.isChecked ? 0 : a.isChecked ? 1 : -1));
+      updatearrfromfirebase();
     },
     [filterOption]
   )
